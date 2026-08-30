@@ -51,11 +51,19 @@ if uploaded_file is not None:
 
     # Prepare image
     image_resized = image.resize((160, 160))
-    image_array = np.array(image_resized, dtype="float32") / 255.0
+
+    image_array = np.array(
+        image_resized,
+        dtype="float32"
+    )
+
     image_array = np.expand_dims(image_array, axis=0)
 
     # Prediction
-    prediction = model.predict(image_array, verbose=0)
+    prediction = model.predict(
+        image_array,
+        verbose=0
+    )
 
     predicted_index = np.argmax(prediction)
     confidence = np.max(prediction) * 100
@@ -75,14 +83,15 @@ st.subheader("✨ About the Project")
 st.write(
     "This AI-based project uses a deep learning image-classification "
     "model trained on real fashion product images. It can identify "
-    "six different clothing categories from an uploaded image."
+    "eight different clothing categories from an uploaded image."
 )
 
 st.subheader("🎯 Supported Categories")
 
 st.write(
-    "👕 Tshirts  |  👔 Shirts  |  👟 Casual Shoes  |  "
-    "👟 Sports Shoes  |  👜 Handbags  |  👚 Tops"
+    "👕 Tshirts  |  👔 Shirts  |  👚 Tops  |  "
+    "👟 Casual Shoes  |  👟 Sports Shoes  |  🩴 Sandals  |  "
+    "👜 Handbags  |  👗 Dresses"
 )
 
 st.caption("AI Clothing Type Detector • Internship Final Project")
