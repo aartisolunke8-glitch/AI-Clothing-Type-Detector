@@ -18,10 +18,12 @@ st.write("Upload a clothing image and let AI identify its category.")
 class_names = [
     "Tshirts",
     "Shirts",
+    "Tops",
     "Casual Shoes",
     "Sports Shoes",
+    "Sandals",
     "Handbags",
-    "Tops"
+    "Dresses"
 ]
 
 # Load trained model
@@ -48,7 +50,7 @@ if uploaded_file is not None:
     )
 
     # Prepare image
-    image_resized = image.resize((96, 96))
+    image_resized = image.resize((160, 160))
     image_array = np.array(image_resized, dtype="float32") / 255.0
     image_array = np.expand_dims(image_array, axis=0)
 
