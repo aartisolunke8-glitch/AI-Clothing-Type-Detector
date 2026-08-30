@@ -29,7 +29,7 @@ class_names = [
 # Load trained model
 @st.cache_resource
 def load_model():
-    return tf.keras.models.load_model("clothing_model.h5")
+    return tf.keras.models.load_model("clothing_model.keras")
 
 model = load_model()
 
