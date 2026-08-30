@@ -10,26 +10,26 @@ st.set_page_config(
     layout="centered"
 )
 
-# Clothing categories
-class_names = [
-    "T-shirt / Top",
-    "Trouser",
-    "Pullover",
-    "Dress",
-    "Coat",
-    "Sandal",
-    "Shirt",
-    "Sneaker",
-    "Bag",
-    "Ankle Boot"
-]
-
 # Title
 st.title("👕 AI Clothing Type Detector")
 st.write("Upload a clothing image and let AI identify its category.")
 
-# Load model
-model = tf.keras.models.load_model("clothing_model.keras")
+# Clothing categories
+class_names = [
+    "Tshirts",
+    "Shirts",
+    "Casual Shoes",
+    "Sports Shoes",
+    "Handbags",
+    "Tops"
+]
+
+# Load trained model
+@st.cache_resource
+def load_model():
+    return tf.keras.models.load_model("clothing_model.keras")
+
+model = load_model()
 
 # Upload image
 uploaded_file = st.file_uploader(
@@ -39,7 +39,7 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
-    image = Image.open(uploaded_file).convert("L")
+    image = Image.open(uploaded_file).convert("RGB")
 
     st.image(
         image,
@@ -48,17 +48,18 @@ if uploaded_file is not None:
     )
 
     # Prepare image
-    image = image.resize((28, 28))
-    image_array = np.array(image) / 255.0
-    image_array = image_array.reshape(1, 28, 28)
+    image_resized = image.resize((96, 96))
+    image_array = np.array(image_resized, dtype="float32") / 255.0
+    image_array = np.expand_dims(image_array, axis=0)
 
     # Prediction
     prediction = model.predict(image_array, verbose=0)
-    predicted_class = np.argmax(prediction)
+
+    predicted_index = np.argmax(prediction)
     confidence = np.max(prediction) * 100
 
     st.success(
-        f"Prediction: {class_names[predicted_class]}"
+        f"Prediction: {class_names[predicted_index]}"
     )
 
     st.info(
@@ -67,9 +68,19 @@ if uploaded_file is not None:
 
 st.divider()
 
-st.subheader("ℹ️ About the Project")
+st.subheader("✨ About the Project")
+
 st.write(
-    "This project uses an AI image-classification model "
-    "trained on the Fashion-MNIST dataset to identify "
-    "different types of clothing."
+    "This AI-based project uses a deep learning image-classification "
+    "model trained on real fashion product images. It can identify "
+    "six different clothing categories from an uploaded image."
 )
+
+st.subheader("🎯 Supported Categories")
+
+st.write(
+    "👕 Tshirts  |  👔 Shirts  |  👟 Casual Shoes  |  "
+    "👟 Sports Shoes  |  👜 Handbags  |  👚 Tops"
+)
+
+st.caption("AI Clothing Type Detector • Internship Final Project")
